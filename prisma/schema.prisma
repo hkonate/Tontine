@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstname                             String
+  lastname                              String
+  email                                 String @unique
+  password                              String
+  rating                                Float @default(100.0)
+  listOfTontine                         Tontine[]
+  tontineCreated                        Tontine[] @relation("tontine_created")
+  paymentRecieved                       Tontine[] @relation("payment")
+  createAt                              DateTime @default(now())
+  updateAt                              DateTime @updatedAt
+}
+
+model Tontine {
+  id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  dayOfPayment                          Int
+  monthlyContribution                   BigInt
+  nberOfAttendee                        Int @default(15) @db.Integer
+  listOfUser                            String[]
+  orderOfPayment                        String[]
+  creatorId                             String @db.Uuid
+  creator                               User @relation("tontine_created", fields: [creatorId], references: [id])
+  attendee                              User[]
+  attendeesPaid                         User[] @relation("payment")
+  payments                              Payment[]
+  createAt                              DateTime @default(now())
+  updateAt                              DateTime @updatedAt
+}
+
+model Payment {
+  id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullname                              String   
+  createAt                              DateTime @default(now())
+  tontineId                             String  @db.Uuid
+  tontine                               Tontine @relation(fields: [tontineId], references: [id])
+}

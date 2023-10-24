@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, Matches } from 'class-validator';
 
 export class SignUpDTO {
   @IsString()
@@ -8,4 +8,18 @@ export class SignUpDTO {
   @IsString()
   @IsNotEmpty()
   lastname: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+    {
+      message: 'password must be a valid',
+    },
+  )
+  password: string;
 }

@@ -23,3 +23,7 @@ export class SignUpDTO {
   )
   password: string;
 }
+
+export class SignUpParamsDTO extends SignUpDTO {}
+
+export class SignUpReturnDTO {}

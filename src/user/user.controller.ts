@@ -1,14 +1,16 @@
 import {
   Controller,
   Get,
+  Body,
   UseGuards,
   Param,
   ParseUUIDPipe,
+  ParseFloatPipe,
+  Put,
 } from '@nestjs/common';
-import { AuthGuard, UserPayloadType } from 'src/guards/auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { UserService } from './user.service';
 import { GetUsersReturnDto } from './dtos/user.getUsers.dtos';
-import { User } from 'src/decorators/user.decorator';
 @Controller('user')
 @UseGuards(AuthGuard)
 export class UserController {
@@ -21,5 +23,13 @@ export class UserController {
   @Get('/:id')
   getUser(@Param('id', ParseUUIDPipe) id: string): Promise<GetUsersReturnDto> {
     return this.userService.getUser(id);
+  }
+
+  @Put('/:id')
+  updateRating(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body('rating', ParseFloatPipe) rating: number,
+  ) {
+    return this.userService.updateRating(id, rating);
   }
 }

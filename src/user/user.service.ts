@@ -28,4 +28,6 @@ export class UserService {
     }
     return user;
   }
+
+  async updateRating(id: string, rating: number) {}
 }

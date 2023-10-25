@@ -71,8 +71,6 @@ export class AuthService {
         email,
       },
     });
-    console.log(user);
-
     return user;
   }
 }

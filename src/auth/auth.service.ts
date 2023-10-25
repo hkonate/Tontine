@@ -3,7 +3,6 @@ import { SignUpParamsDTO } from './dtos/auth.signup.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcript from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { log } from 'console';
 
 @Injectable()
 export class AuthService {

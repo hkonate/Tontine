@@ -14,36 +14,97 @@ model User{
   id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   firstname                             String
   lastname                              String
+  pseudo                                String @unique
   email                                 String @unique
   password                              String
   rating                                Float @default(100.0)
+  Profile                               Profile?
   listOfTontine                         Tontine[]
   tontineCreated                        Tontine[] @relation("tontine_created")
-  paymentRecieved                       Tontine[] @relation("payment")
+  paymentList                           Payment[]
+  paymentRecieved                       Jackpot[]
+  cardInfo                              CardInfo[]
   createAt                              DateTime @default(now())
   updateAt                              DateTime @updatedAt
+}
+
+model Profile {
+  id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  img                                   String?
+  desc                                  String?
+  socialNetwork                         String?
+  userId                                String @db.Uuid @unique
+  user                                  User @relation(fields: [userId], references: [id])
+  createAt                              DateTime @default(now())
+  updateAt                              DateTime @updatedAt
+}
+
+model CardInfo {
+  id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullname                              String
+  cardNumber                            String
+  expDate                               String
+  code                                  String
+  user                                  User @relation(fields: [id], references: [id])
+  createdAt                             DateTime @default(now())
+  updatedAt                             DateTime @updatedAt
 }
 
 model Tontine {
   id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   dayOfPayment                          Int
-  monthlyContribution                   BigInt
-  nberOfAttendee                        Int @default(15) @db.Integer
+  monthlyContribution                   Int
+  nberOfAttendee                        Int @default(15) 
   listOfUser                            String[]
   orderOfPayment                        String[]
+  start                                 DateTime
+  type                                  TontineType
   creatorId                             String @db.Uuid
   creator                               User @relation("tontine_created", fields: [creatorId], references: [id])
   attendee                              User[]
-  attendeesPaid                         User[] @relation("payment")
+  attendeesPaid                         Jackpot[]
   payments                              Payment[]
-  createAt                              DateTime @default(now())
-  updateAt                              DateTime @updatedAt
+  penalityPot                           PenalityPot?
+  createdAt                             DateTime @default(now())
+  updatedAt                             DateTime @updatedAt
+}
+
+model Jackpot {
+  id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  month                                 String
+  pseudo                                String
+  amount                                Int
+  tontineId                             String @db.Uuid
+  tontine                               Tontine @relation(fields: [tontineId], references: [id])
+  userId                                String? @db.Uuid
+  user                                  User? @relation(fields: [userId], references: [id])
+  createdAt                             DateTime @default(now())
 }
 
 model Payment {
   id                                    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fullname                              String   
-  createAt                              DateTime @default(now())
+  pseudo                                String
+  month                                 String
+  amount                                Int
   tontineId                             String  @db.Uuid
   tontine                               Tontine @relation(fields: [tontineId], references: [id])
+  userId                                String? @db.Uuid
+  user                                  User? @relation(fields: [userId], references: [id])
+  penalityId                            String? @db.Uuid
+  penality                              PenalityPot? @relation(fields: [penalityId], references: [id])
+  createAt                              DateTime @default(now())
+}
+
+model PenalityPot {
+  id                                    String @id @default(dbgenerated("gen_random_Uuid()")) @db.Uuid
+  totalAmount                           Int
+  fineInfo                              Payment[]
+  tontine                               Tontine? @relation(fields: [id], references: [id])
+  createAt                              DateTime @default(now())
+  updateAt                              DateTime @updatedAt
+}
+
+enum TontineType {
+  CLASSIC
+  REAL_ESTATE
 }

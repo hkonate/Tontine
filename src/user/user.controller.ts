@@ -7,10 +7,12 @@ import {
   ParseUUIDPipe,
   ParseFloatPipe,
   Put,
+  Delete,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard, UserPayloadType } from 'src/guards/auth.guard';
 import { UserService } from './user.service';
 import { GetUsersReturnDto } from './dtos/user.getUsers.dtos';
+import { User } from 'src/decorators/user.decorator';
 @Controller('user')
 @UseGuards(AuthGuard)
 export class UserController {
@@ -26,10 +28,12 @@ export class UserController {
   }
 
   @Put('/:id')
-  updateRating(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body('rating', ParseFloatPipe) rating: number,
-  ) {
-    return this.userService.updateRating(id, rating);
+  updateRating(@Body() usersId: string[]) {
+    return this.userService.updateRating(usersId);
+  }
+
+  @Delete()
+  deleteUser(@User() userPayload: UserPayloadType) {
+    return this.userService.deleteUser(userPayload.id);
   }
 }

@@ -11,6 +11,10 @@ export class SignUpDTO {
 
   @IsString()
   @IsNotEmpty()
+  pseudo: string;
+
+  @IsString()
+  @IsNotEmpty()
   email: string;
 
   @IsString()

@@ -11,6 +11,7 @@ export class AuthService {
   async signup({
     firstname,
     lastname,
+    pseudo,
     email,
     password,
   }: SignUpParamsDTO): Promise<string> {
@@ -28,11 +29,12 @@ export class AuthService {
         data: {
           firstname,
           lastname,
+          pseudo,
           email,
           password: hashedPassword,
         },
       });
-      return this.generateToken(newUser.firstname, newUser.id);
+      return this.generateToken(newUser.pseudo, newUser.id);
     } catch (error) {
       throw new HttpException(
         "Erreur lors de l'enregistrement de l'utilisateur. Veuillez réessayer ultérieurement.",

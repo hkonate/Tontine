@@ -2,6 +2,7 @@ export const userSelect = {
   id: true,
   firstname: true,
   lastname: true,
+  pseudo: true,
   email: true,
   rating: true,
   listOfTontine: {

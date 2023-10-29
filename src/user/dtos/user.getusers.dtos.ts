@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class GetUsersReturnDto {
   @IsUUID()
@@ -14,9 +14,12 @@ export class GetUsersReturnDto {
 
   @IsString()
   @IsNotEmpty()
-  email: string;
+  pseudo: string;
 
   @IsString()
   @IsNotEmpty()
+  email: string;
+
+  @IsNumber()
   rating: number;
 }

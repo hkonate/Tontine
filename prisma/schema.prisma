@@ -17,13 +17,14 @@ model User{
   pseudo                                String @unique
   email                                 String @unique
   password                              String
-  rating                                Float @default(100.0)
-  Profile                               Profile?
+  rating                                Int @default(100)
+  penalityRate                          Int   @default(5)
+  cardInfo                              CardInfo[]
+  profile                               Profile?
   listOfTontine                         Tontine[]
   tontineCreated                        Tontine[] @relation("tontine_created")
   paymentList                           Payment[]
   paymentRecieved                       Jackpot[]
-  cardInfo                              CardInfo[]
   createAt                              DateTime @default(now())
   updateAt                              DateTime @updatedAt
 }
@@ -59,6 +60,8 @@ model Tontine {
   orderOfPayment                        String[]
   start                                 DateTime
   type                                  TontineType
+  penality                              Boolean
+  done                                  Boolean @default(false)
   creatorId                             String @db.Uuid
   creator                               User @relation("tontine_created", fields: [creatorId], references: [id])
   attendee                              User[]
@@ -86,12 +89,13 @@ model Payment {
   pseudo                                String
   month                                 String
   amount                                Int
+  penality                              Boolean
   tontineId                             String  @db.Uuid
   tontine                               Tontine @relation(fields: [tontineId], references: [id])
   userId                                String? @db.Uuid
   user                                  User? @relation(fields: [userId], references: [id])
   penalityId                            String? @db.Uuid
-  penality                              PenalityPot? @relation(fields: [penalityId], references: [id])
+  penalityPot                           PenalityPot? @relation(fields: [penalityId], references: [id])
   createAt                              DateTime @default(now())
 }
 
